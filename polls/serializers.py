@@ -9,6 +9,10 @@ class ChoiceSerializer(serializers.Serializer):
         return Choice.objects.create(**validated_data)
 
 
+class ChoiceSerializerWithVotes(ChoiceSerializer):
+    votes = serializers.IntegerField(read_only=True)
+
+
 class QuestionListPageSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     question_text = serializers.CharField(max_length=200)
@@ -27,6 +31,10 @@ class QuestionListPageSerializer(serializers.Serializer):
 
 class QuestionDetailPageSerializer(QuestionListPageSerializer):
     choices = ChoiceSerializer(many=True, read_only=True)
+
+
+class QuestionResultPageSerializer(QuestionListPageSerializer):
+    choices = ChoiceSerializerWithVotes(many=True, read_only=True)
 
 
 class VoteSerializer(serializers.Serializer):
